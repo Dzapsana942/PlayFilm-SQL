@@ -2,7 +2,7 @@ USE PlayFilm;
 GO
 
 
---Widok: podsumowanie u¿ytkownika
+--Widok: podsumowanie uÂ¿ytkownika
 CREATE OR ALTER VIEW dbo.vw_UserSummary AS
 WITH WhAgg AS (
     SELECT
@@ -31,7 +31,7 @@ SELECT
 FROM dbo.Users u
 LEFT JOIN WhAgg w ON w.UserID = u.UserID
 LEFT JOIN RAgg r ON r.UserID = u.UserID;
-
+GO
 	
 
 --Widok: statystyki filmu
@@ -65,19 +65,19 @@ SELECT
 FROM dbo.Movies m
 LEFT JOIN WhAgg w ON w.MovieID = m.MovieID
 LEFT JOIN RAgg r ON r.MovieID = m.MovieID;
+GO
 
 
-
---Widok: ranking filmów wed³ug czasu ogl¹dania
+--Widok: ranking filmÃ³w wedÂ³ug czasu oglÂ¹dania
 CREATE OR ALTER VIEW dbo.vw_MovieRankingByMinutes AS
 SELECT
 	ms.*,
 	RANK() OVER (ORDER BY ms.MinutesWatched DESC) AS RankByMinutes
 FROM dbo.vw_MovieStats ms;
+GO
 
 
-
---Widok: Statystyki ogl¹dalnoœci filmów wed³ug krajów
+--Widok: Statystyki oglÂ¹dalnoÅ“ci filmÃ³w wedÂ³ug krajÃ³w
 CREATE OR ALTER VIEW dbo.vw_CountryStats AS
 SELECT 
 	Country,
@@ -86,4 +86,5 @@ SELECT
 	SUM(MinutesWatched)   AS TotalMinutesWatched
 FROM dbo.vw_UserSummary
 GROUP BY Country;
+GO
 
