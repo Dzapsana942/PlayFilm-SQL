@@ -13,7 +13,7 @@ CREATE TABLE dbo.Users (
 	UserID INT IDENTITY(1,1) PRIMARY KEY,
 	Email NVARCHAR(100) NOT NULL UNIQUE,
 	FullName NVARCHAR(200) NOT NULL,
-	Contry NVARCHAR(200) NOT NULL,
+	Country NVARCHAR(200) NOT NULL,
 	SingUpDate DATE NOT NULL DEFAULT (CAST(GETDATE() AS DATE))
 );
 
@@ -66,4 +66,5 @@ CREATE TABLE dbo.Ratings (
     CONSTRAINT FK_Ratings_Movies FOREIGN KEY (MovieID)
         REFERENCES dbo.Movies(MovieID),
     CONSTRAINT UQ_Ratings_User_Movie UNIQUE (UserID, MovieID) -- 1 ocena na film
+
 );
