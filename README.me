@@ -1,206 +1,302 @@
-## 📌 1. Struktura bazy danych
+🎬 PlayFilm — Projekt SQL (T-SQL)
 
-Baza **PlayFilm** zawiera następujące tabele:
+PlayFilm to kompletnie zaprojektowany system bazodanowy platformy streamingowej.
+Projekt został stworzony jako przykład do portfolio — pokazuje umiejętności z zakresu:
 
-- **Users** – informacje o użytkownikach
-- **Plans** – plany subskrypcji
-- **UserPlans** – historia planów użytkowników
-- **Movies** – katalog filmów
-- **WatchHistory** – historia oglądania
-- **Ratings** – oceny filmów (1 ocena użytkownika na film – constraint UNIQUE)
+projektowania baz danych
 
-Projekt odzwierciedla realną logikę działania platform streamingowych.
+tworzenia widoków analitycznych
 
----
+pisania raportów SQL
 
-## 📌 2. Przykładowe dane
+pracy z uprawnieniami i rolami
 
-Plik `02_insert_sample_data.sql` zawiera dane umożliwiające realistyczne raportowanie:
+praktycznej analityki danych
 
-- użytkownicy z kilku krajów,
-- filmy różnych gatunków i z różnych lat,
-- wielokrotne sesje oglądania,
-- oceny filmów,
-- historia zmian planów subskrypcji.
+📊 1. ERD — Diagram relacji
 
-Dane zostały zaprojektowane tak, aby różne zapytania analityczne dawały sensowne wyniki.
+🗃 2. Struktura bazy danych
 
----
+Baza PlayFilm zawiera następujące tabele:
 
-## 📌 3. Widoki analityczne
+Users
 
-### ✔ `vw_UserSummary`
-Podsumowanie aktywności użytkowników (liczba filmów, sesji oglądania, minuty, średnia ocen).
+Informacje o użytkownikach platformy.
 
-### ✔ `vw_MovieStats`
-Statystyki oglądalności i ocen filmów (minuty, liczba odsłon, liczba ocen, średnia ocena).
+Plans
 
-### ✔ `vw_MovieRankingByMinutes`
-Ranking filmów wg łącznego czasu oglądania (funkcja okna `RANK()`).
+Dostępne plany subskrypcyjne.
 
-### ✔ `vw_CountryStats`
-Zbiorcze statystyki aktywności użytkowników z podziałem na kraje.
+UserPlans
 
-Szczegóły: `03_views.sql`
+Historia zmian planów (użytkownik może zmieniać plan w czasie).
 
----
+Movies
 
-## 📌 4. Przykłady raportów
+Biblioteka filmów.
 
-Wszystkie zapytania analityczne znajdują się w osobnym pliku:
+WatchHistory
 
-👉 **`03.2_reports_examples.sql`**
+Historia sesji oglądania (kto, co, kiedy, ile minut).
 
-Znajdziesz tam m.in.:
+Ratings
 
-- ranking filmów,
-- najaktywniejszych użytkowników,
-- porównania krajów,
-- statystyki miesięczne,
-- przykłady użycia funkcji okna.
+Oceny filmów (ograniczenie: 1 ocena na film per użytkownik).
 
----
+Projekt odwzorowuje realną logikę zachowania platform streamingowych.
 
-## 📌 5. Bezpieczeństwo i role
+📥 3. Przykładowe dane
 
-Plik `04_security_and_roles.sql` implementuje:
+Plik 02_insert_sample_data.sql zawiera dane pozwalające generować sensowne raporty:
 
-- login `playfilm_reader`,
-- user w bazie,
-- rolę raportową `report_reader`,
-- GRANT SELECT tylko na widoki,
-- DENY na wszystkie tabele,
-- test uprawnień poprzez `EXECUTE AS USER`.
+użytkownicy z różnych krajów,
 
-Taki model bezpieczeństwa odwzorowuje realne środowisko raportowe.
+realne godziny oglądania,
 
----
+wiele sesji użytkowników,
 
-## 🧰 Technologie
+oceny filmów,
 
-- Microsoft SQL Server (2019+)
-- T-SQL (DDL, DML, CTE, funkcje okna, role, uprawnienia)
-- SQL Server Management Studio (SSMS)
+zmiany planów subskrypcji.
 
----
+📈 4. Widoki analityczne (Views)
 
-## 🎯 Cel projektu
+Plik 03_views.sql zawiera następujące widoki:
 
-Celem projektu jest nauka zaawansowanego SQL oraz stworzenie profesjonalnego przykładu do portfolio GitHub:
+✔ vw_UserSummary
 
-- logiczny model danych,
-- raporty,
-- widoki analityczne,
-- zarządzanie uprawnieniami,
-- przykład rzeczywistego projektu BI/SQL.
+Podsumowanie aktywności użytkownika:
 
----
+liczba obejrzanych filmów
 
-# 🌍 English Version
+liczba sesji
 
-## 📌 1. Database Structure
+łączny czas oglądania
 
-The **PlayFilm** database includes the following tables:
+średnia ocena użytkownika
 
-- **Users** – user information  
-- **Plans** – subscription plans  
-- **UserPlans** – subscription history per user  
-- **Movies** – movie catalog  
-- **WatchHistory** – watch sessions with timestamps and minutes watched  
-- **Ratings** – movie ratings (each user can rate a movie only once)
+✔ vw_MovieStats
 
-This structure reflects the logic of real streaming platforms.
+Statystyki filmów:
 
----
+liczba odsłon
 
-## 📌 2. Sample Data
+suma minut oglądania
 
-File: `02_insert_sample_data.sql`
+liczba ocen
 
-Includes realistic datasets for analytics:
+średnia ocena
 
-- users from multiple countries  
-- movies of various genres and years  
-- multiple watch sessions per user  
-- movie ratings from different users  
-- subscription plan history
+Zbudowane z użyciem CTE i oddzielnych agregacji.
 
-The sample data is designed to produce meaningful analytical results.
+✔ vw_MovieRankingByMinutes
 
----
+Ranking filmów wg sumy obejrzanych minut
+(Funkcja okna: RANK() OVER (ORDER BY MinutesWatched DESC)).
 
-## 📌 3. Analytical Views
-
-### ✔ `vw_UserSummary`
-Aggregated user activity (movies watched, number of sessions, total minutes, average rating).
-
-### ✔ `vw_MovieStats`
-Aggregated movie performance (total watch time, number of views, ratings count, average rating).
-
-### ✔ `vw_MovieRankingByMinutes`
-Ranking of movies using a window function:
-
-```sql
-RANK() OVER (ORDER BY MinutesWatched DESC)
 ✔ vw_CountryStats
-Country-level aggregated analytics based on user activity.
 
-All view definitions: 03_views.sql
+Aktywność użytkowników w podziale na kraje.
 
-📌 4. Reporting Examples
-All analytical query examples are stored in:
+📄 5. Raporty SQL
+
+Wszystkie gotowe zapytania znajdują się w:
 
 👉 03.2_reports_examples.sql
 
-This file contains queries such as:
+Zawierają m.in.:
 
-movie rankings
+top 5 filmów,
 
-top active users
+najlepiej oceniane filmy,
 
-country comparisons
+najbardziej aktywnych użytkowników,
 
-monthly activity
+statystyki krajów,
 
-window function examples
+rankingi wg czasu oglądania,
 
-📌 5. Security & Roles
-File: 04_security_and_roles.sql
+przykłady zapytań analitycznych.
 
-Implements:
+🔐 6. Model bezpieczeństwa
 
-login playfilm_reader
+Plik 04_security_and_roles.sql implementuje:
 
-database user
+✔ Login & użytkownik:
 
-reporting role report_reader
+playfilm_reader
 
-GRANT SELECT only on views
+✔ Rola raportowa:
 
-DENY all operations on base tables
+report_reader
 
-security testing using EXECUTE AS USER
+✔ Uprawnienia:
 
-This represents a realistic BI/reporting security model in SQL Server.
+SELECT tylko na widoki
 
-🧰 Technologies
-Microsoft SQL Server
+DENY na wszystkie tabele (Users, Movies, WatchHistory itd.)
 
-T-SQL (DDL, DML, CTE, window functions, database roles)
+✔ Test uprawnień:
+EXECUTE AS USER = 'playfilm_reader';
 
-SQL Server Management Studio (SSMS)
+🧰 7. Technologie
 
-🎯 Project Objective
-Showcase SQL skills through a complete analytical project:
+Microsoft SQL Server 2019+
 
-relational data model
+T-SQL
 
-reporting views
+Widoki, CTE, funkcje okna
 
-CTE and window functions
+SSMS
 
-security model
+🎯 Cel projektu
 
-example analytical queries
+Celem projektu jest pokazanie praktycznej wiedzy SQL poprzez:
 
-This project serves as a portfolio example for data analytics and SQL engineering roles.
+zaprojektowanie struktury bazy,
+
+przygotowanie danych,
+
+stworzenie widoków biznesowych,
+
+generowanie raportów,
+
+wdrożenie ról i uprawnień.
+
+---
+
+🇬🇧 English Version — README
+🎬 PlayFilm — SQL Project (T-SQL)
+
+PlayFilm is a fully designed SQL database system simulating a real streaming platform.
+It demonstrates skills in:
+
+database modeling
+
+analytical SQL
+
+report creation
+
+permissions & security
+
+data engineering practices
+
+📊 1. ERD — Entity Relationship Diagram
+
+🗃 2. Database Structure
+Users
+
+User accounts.
+
+Plans
+
+Subscription plans.
+
+UserPlans
+
+Plan change history.
+
+Movies
+
+Movie catalog.
+
+WatchHistory
+
+Watch sessions (who watched what, when, and for how long).
+
+Ratings
+
+Movie ratings (1 rating per user per movie, enforced with UNIQUE constraint).
+
+📥 3. Sample Data
+
+The file 02_insert_sample_data.sql includes realistic sample data:
+
+multiple countries
+
+watch sessions
+
+movie ratings
+
+subscription plan changes
+
+movies from various genres and years
+
+📈 4. Analytical Views
+
+Contained in 03_views.sql:
+
+✔ vw_UserSummary
+
+User activity summary.
+
+✔ vw_MovieStats
+
+Movie performance metrics.
+
+✔ vw_MovieRankingByMinutes
+
+Ranking based on minutes watched
+(using: RANK() OVER (ORDER BY MinutesWatched DESC)).
+
+✔ vw_CountryStats
+
+Aggregated statistics by user country.
+
+📄 5. Analytical Reports
+
+All SQL reports are in:
+
+👉 03.2_reports_examples.sql
+
+Includes:
+
+top movies
+
+highest-rated titles
+
+most active users
+
+country-level statistics
+
+window-function examples
+
+🔐 6. Security Model
+
+File 04_security_and_roles.sql sets up:
+
+login + user: playfilm_reader
+
+role: report_reader
+
+permissions:
+
+GRANT SELECT on views
+
+DENY table access
+
+Includes permission testing.
+
+🧰 7. Technologies Used
+
+SQL Server 2019+
+
+T-SQL
+
+CTEs, window functions, views
+
+SSMS
+
+🎯 Project Goal
+
+To provide a complete SQL portfolio project demonstrating:
+
+clean data model
+
+prepared sample dataset
+
+analytical SQL views
+
+business reports
+
+real-world permission model
