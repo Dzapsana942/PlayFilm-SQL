@@ -4,7 +4,7 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'playfilm_reader')
 BEGIN
 	CREATE LOGIN playfilm_reader
-		WITH PASSWORD = 'reader123!', CHECK_POLICY = ON;
+		WITH PASSWORD = 'Reader123!', CHECK_POLICY = ON;
 END;
 GO
 
@@ -23,9 +23,12 @@ GO
 ALTER ROLE report_reader ADD MEMBER playfilm_reader;
 GO
 
+
 GRANT SELECT ON dbo.vw_UserSummary TO report_reader;
 GRANT SELECT ON dbo.vw_MovieRankingByMinutes TO report_reader;
 GRANT SELECT ON dbo.vw_MovieStats TO report_reader;
+GRANT SELECT ON dbo.vw_CountryStats TO report_reader;
+
 
 DENY SELECT, INSERT, UPDATE, DELETE ON dbo.Users TO report_reader;
 DENY SELECT, INSERT, UPDATE, DELETE ON dbo.Plans TO report_reader;
@@ -34,4 +37,13 @@ DENY SELECT, INSERT, UPDATE, DELETE ON dbo.Movies TO report_reader;
 DENY SELECT, INSERT, UPDATE, DELETE ON dbo.WatchHistory TO report_reader;
 DENY SELECT, INSERT, UPDATE, DELETE ON dbo.Ratings TO report_reader;
 
+
 EXECUTE AS USER = 'playfilm_reader';
+
+SELECT TOP 3 * FROM dbo.vw_UserSummary;
+SELECT TOP 3 * FROM dbo.vw_MovieStats;
+SELECT TOP 3 * FROM dbo.vw_MovieRankingByMinutes;
+
+SELECT TOP 3 * FROM dbo.Users;
+
+REVERT;
