@@ -1,0 +1,210 @@
+## 📌 1. Struktura bazy danych
+
+Baza **PlayFilm** zawiera następujące tabele:
+
+- **Users** – informacje o użytkownikach
+- **Plans** – plany subskrypcji
+- **UserPlans** – historia planów użytkowników
+- **Movies** – katalog filmów
+- **WatchHistory** – historia oglądania
+- **Ratings** – oceny filmów (1 ocena użytkownika na film – constraint UNIQUE)
+
+Projekt odzwierciedla realną logikę działania platform streamingowych.
+
+---
+
+## 📌 2. Przykładowe dane
+
+Plik `02_insert_sample_data.sql` zawiera dane umożliwiające realistyczne raportowanie:
+
+- użytkownicy z kilku krajów,
+- filmy różnych gatunków i z różnych lat,
+- wielokrotne sesje oglądania,
+- oceny filmów,
+- historia zmian planów subskrypcji.
+
+Dane zostały zaprojektowane tak, aby różne zapytania analityczne dawały sensowne wyniki.
+
+---
+
+## 📌 3. Widoki analityczne
+
+### ✔ `vw_UserSummary`
+Podsumowanie aktywności użytkowników (liczba filmów, sesji oglądania, minuty, średnia ocen).
+
+### ✔ `vw_MovieStats`
+Statystyki oglądalności i ocen filmów (minuty, liczba odsłon, liczba ocen, średnia ocena).
+
+### ✔ `vw_MovieRankingByMinutes`
+Ranking filmów wg łącznego czasu oglądania (funkcja okna `RANK()`).
+
+### ✔ `vw_CountryStats`
+Zbiorcze statystyki aktywności użytkowników z podziałem na kraje.
+
+Szczegóły: `03_views.sql`
+
+---
+
+## 📌 4. Przykłady raportów
+
+Wszystkie zapytania analityczne znajdują się w osobnym pliku:
+
+👉 **`03.2_reports_examples.sql`**
+
+Znajdziesz tam m.in.:
+
+- ranking filmów,
+- najaktywniejszych użytkowników,
+- porównania krajów,
+- statystyki miesięczne,
+- przykłady użycia funkcji okna.
+
+---
+
+## 📌 5. Bezpieczeństwo i role
+
+Plik `04_security_and_roles.sql` implementuje:
+
+- login `playfilm_reader`,
+- user w bazie,
+- rolę raportową `report_reader`,
+- GRANT SELECT tylko na widoki,
+- DENY na wszystkie tabele,
+- test uprawnień poprzez `EXECUTE AS USER`.
+
+Taki model bezpieczeństwa odwzorowuje realne środowisko raportowe.
+
+---
+
+## 🧰 Technologie
+
+- Microsoft SQL Server (2019+)
+- T-SQL (DDL, DML, CTE, funkcje okna, role, uprawnienia)
+- SQL Server Management Studio (SSMS)
+
+---
+
+## 🎯 Cel projektu
+
+Celem projektu jest nauka zaawansowanego SQL oraz stworzenie profesjonalnego przykładu do portfolio GitHub:
+
+- logiczny model danych,
+- raporty,
+- widoki analityczne,
+- zarządzanie uprawnieniami,
+- przykład rzeczywistego projektu BI/SQL.
+
+---
+
+# 🌍 English Version
+
+## 📌 1. Database Structure
+
+The **PlayFilm** database includes the following tables:
+
+- **Users** – user information  
+- **Plans** – subscription plans  
+- **UserPlans** – subscription history per user  
+- **Movies** – movie catalog  
+- **WatchHistory** – watch sessions with timestamps and minutes watched  
+- **Ratings** – movie ratings (each user can rate a movie only once)
+
+This structure reflects the logic of real streaming platforms.
+
+---
+
+## 📌 2. Sample Data
+
+File: `02_insert_sample_data.sql`
+
+Includes realistic datasets for analytics:
+
+- users from multiple countries  
+- movies of various genres and years  
+- multiple watch sessions per user  
+- movie ratings from different users  
+- subscription plan history
+
+The sample data is designed to produce meaningful analytical results.
+
+---
+
+## 📌 3. Analytical Views
+
+### ✔ `vw_UserSummary`
+Aggregated user activity (movies watched, number of sessions, total minutes, average rating).
+
+### ✔ `vw_MovieStats`
+Aggregated movie performance (total watch time, number of views, ratings count, average rating).
+
+### ✔ `vw_MovieRankingByMinutes`
+Ranking of movies using a window function:
+
+```sql
+RANK() OVER (ORDER BY MinutesWatched DESC)
+✔ vw_CountryStats
+Country-level aggregated analytics based on user activity.
+
+All view definitions: 03_views.sql
+
+📌 4. Reporting Examples
+All analytical query examples are stored in:
+
+👉 03.2_reports_examples.sql
+
+This file contains queries such as:
+
+movie rankings
+
+top active users
+
+country comparisons
+
+monthly activity
+
+window function examples
+
+📌 5. Security & Roles
+File: 04_security_and_roles.sql
+
+Implements:
+
+login playfilm_reader
+
+database user
+
+reporting role report_reader
+
+GRANT SELECT only on views
+
+DENY all operations on base tables
+
+security testing using EXECUTE AS USER
+
+This represents a realistic BI/reporting security model in SQL Server.
+
+🧰 Technologies
+Microsoft SQL Server
+
+T-SQL (DDL, DML, CTE, window functions, database roles)
+
+SQL Server Management Studio (SSMS)
+
+🎯 Project Objective
+Showcase SQL skills through a complete analytical project:
+
+relational data model
+
+reporting views
+
+CTE and window functions
+
+security model
+
+example analytical queries
+
+This project serves as a portfolio example for data analytics and SQL engineering roles.
+
+yaml
+Skopiuj kod
+
